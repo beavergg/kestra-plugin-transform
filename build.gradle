@@ -33,6 +33,7 @@ dependencies {
     // lombok
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
+    compileOnly "software.amazon.ion:ion-java:$ionjavaVersion"
 
     // micronaut
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
@@ -47,6 +48,7 @@ dependencies {
 
     // libs included in the final jar
     api group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
+    api group: 'software.amazon.ion', name: 'ion-java', version: '1.5.1'
 }
 
 
