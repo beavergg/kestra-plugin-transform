@@ -1,0 +1,9 @@
+id: transform
+namespace: io.kestra.unittest
+
+tasks:
+  - id: fileTransform
+    type: io.kestra.plugin.hackathon.Transformation
+    description: transform/format via self defined plugin
+    from: "{{ outputs.csvReader.uri }}"
+

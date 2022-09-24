@@ -1,0 +1,45 @@
+{
+  Identifier: "9012",
+  AccessCode: "12se74",
+  RecoveryCode: "rb9012",
+  FirstName: "Rachel",
+  LastName: "Booker",
+  Department: "Sales",
+  Location: "Manchester"
+}
+{
+  Identifier: "2070",
+  AccessCode: "04ap67",
+  RecoveryCode: "lg2070",
+  FirstName: "Laura",
+  LastName: "Grey",
+  Department: "Depot",
+  Location: "London"
+}
+{
+  Identifier: "4081",
+  AccessCode: "30no86",
+  RecoveryCode: "cj4081",
+  FirstName: "Craig",
+  LastName: "Johnson",
+  Department: "Depot",
+  Location: "London"
+}
+{
+  Identifier: "9346",
+  AccessCode: "14ju73",
+  RecoveryCode: "mj9346",
+  FirstName: "Mary",
+  LastName: "Jenkins",
+  Department: "Engineering",
+  Location: "Manchester"
+}
+{
+  Identifier: "5079",
+  AccessCode: "09ja61",
+  RecoveryCode: "js5079",
+  FirstName: "Jamie",
+  LastName: "Smith",
+  Department: "Engineering",
+  Location: "Manchester"
+}

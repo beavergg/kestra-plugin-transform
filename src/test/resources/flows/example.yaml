@@ -1,13 +1,13 @@
 id: example
-namespace: io.kestra.templates
+namespace: io.kestra.unittest
 
 tasks:
-- id: date
-  type: io.kestra.plugin.templates.Example
-  format: "{{taskrun.startDate}}"
-- id: task-id
-  type: io.kestra.plugin.templates.Example
-  format: "{{task.id}}"
-- id: flow-id
-  type: io.kestra.plugin.templates.Example
-  format: "{{outputs['task-id'].child.value}}"
+  - id: date
+    type: io.kestra.plugin.hackathon.Example
+    format: "{{taskrun.startDate}}"
+  - id: task-id
+    type: io.kestra.plugin.hackathon.Example
+    format: "{{task.id}}"
+  - id: flow-id
+    type: io.kestra.plugin.hackathon.Example
+    format: "{{outputs['task-id'].child.value}}"
