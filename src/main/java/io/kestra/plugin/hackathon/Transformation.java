@@ -8,6 +8,7 @@ import io.kestra.core.models.executions.metrics.Timer;
 import io.kestra.core.models.tasks.RunnableTask;
 import io.kestra.core.models.tasks.Task;
 import io.kestra.core.runners.RunContext;
+import io.kestra.plugin.hackathon.model.DynamicTable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -49,13 +50,14 @@ public class Transformation extends Task implements RunnableTask<Transformation.
         IonReaderBuilder readerBuilder = IonReaderBuilder.standard();
         try (IonReader reader = readerBuilder.build(inputStream)) {
             IonType type = reader.next();
+            DynamicTable table = new DynamicTable(logger);
             while (type != null) {
-                logger.info("row type: " + type);
+                table.appendRow();
                 reader.stepIn();
                 IonType fieldType = reader.next();
                 while (fieldType != null) {
-                    logger.info("field type: " + type + "; fileName: " + reader.getFieldName() + "; fileValue: " + reader.stringValue());
                     fieldType = reader.next();
+                    table.appendCell(reader.getFieldName(), getValue(fieldType, reader));
                 }
                 reader.stepOut();
                 type = reader.next();
@@ -63,6 +65,13 @@ public class Transformation extends Task implements RunnableTask<Transformation.
         }
         publishMetric(sw);
         return Output.builder().uri(inputFile).build();
+    }
+
+    private Object getValue(IonType fieldType, IonReader reader) {
+        if (fieldType == IonType.STRING) return reader.stringValue();
+        if (fieldType == IonType.INT) return reader.intValue();
+        // TODO: support more ion type.
+        return null;
     }
 
     private void publishMetric(Stopwatch sw) {

@@ -9,6 +9,7 @@ plugins {
     id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
     id "com.github.ben-manes.versions" version "0.42.0"
     id 'net.researchgate.release' version '3.0.1'
+    id 'antlr'
 }
 
 def isBuildSnapshot = version.toString().endsWith("-SNAPSHOT")
@@ -34,6 +35,8 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     compileOnly "software.amazon.ion:ion-java:$ionjavaVersion"
+    compileOnly "org.antlr:antlr4-runtime:$antlrVersion"
+    antlr "org.antlr:antlr4:$antlrVersion"
 
     // micronaut
     annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
@@ -48,9 +51,17 @@ dependencies {
 
     // libs included in the final jar
     api group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
-    api group: 'software.amazon.ion', name: 'ion-java', version: '1.5.1'
+    api group: 'software.amazon.ion', name: 'ion-java', version: "$ionjavaVersion"
+    // api group: 'org.antlr', name: 'antlr4', version: "$antlrVersion"
+    api group: 'org.antlr', name: 'antlr4-runtime', version: "$antlrVersion"
 }
 
+/**********************************************************************************************************************\
+ * Antlr
+ **********************************************************************************************************************/
+generateGrammarSource {
+    outputDirectory = new File("src/main/java/io/kestra/plugin/hackathon/rule/engine")
+}
 
 /**********************************************************************************************************************\
  * Test
