@@ -101,8 +101,8 @@ public class HackathonRuleResolve extends HackathonBaseListener {
         Object value = stack.pop();
         Object field = stack.pop();
         AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
-        Getter valueGetter = BeanFactory.convertToGetter(context, value);
-        Getter fieldGetter = BeanFactory.convertToGetter(context, field);
+        Getter valueGetter = BeanFactory.adjustGetter(context, value);
+        Getter fieldGetter = BeanFactory.adjustGetter(context, field);
         RowMap putMap = BeanFactory.getPutRowMap(context, fieldGetter, valueGetter);
         stack.push(putMap);
     }
@@ -111,7 +111,7 @@ public class HackathonRuleResolve extends HackathonBaseListener {
     public void exitRemove(HackathonParser.RemoveContext ctx) {
         Object value = stack.pop();
         AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
-        Getter fieldGetter = BeanFactory.convertToGetter(context, value);
+        Getter fieldGetter = BeanFactory.adjustGetter(context, value);
         RowMap removeMap = BeanFactory.getRemoveRowMap(context, fieldGetter);
         stack.push(removeMap);
     }
@@ -121,8 +121,8 @@ public class HackathonRuleResolve extends HackathonBaseListener {
         Object oldField = stack.pop();
         Object newField = stack.pop();
         AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
-        Getter oldFieldGetter = BeanFactory.convertToGetter(context, oldField);
-        Getter newFieldGetter = BeanFactory.convertToGetter(context, newField);
+        Getter oldFieldGetter = BeanFactory.adjustGetter(context, oldField);
+        Getter newFieldGetter = BeanFactory.adjustGetter(context, newField);
         RowMap removeMap = BeanFactory.getRenameMap(context, oldFieldGetter, newFieldGetter);
         stack.push(removeMap);
     }
@@ -131,7 +131,7 @@ public class HackathonRuleResolve extends HackathonBaseListener {
     public void exitGetfield(HackathonParser.GetfieldContext ctx) {
         Object field = stack.pop();
         AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
-        Getter getter = BeanFactory.convertToGetter(context, field);
+        Getter getter = BeanFactory.adjustGetter(context, field);
         Getter fieldGetter = BeanFactory.getFieldGetter(context, getter);
         stack.push(fieldGetter);
     }

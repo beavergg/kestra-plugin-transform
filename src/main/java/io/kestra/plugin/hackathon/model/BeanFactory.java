@@ -9,8 +9,8 @@ public class BeanFactory {
         return new AdaptContext(logger, ctx);
     }
 
-    public static Getter convertToGetter(AdaptContext ctx, Object obj) {
-        if (obj instanceof ConstanceGetter) return (ConstanceGetter) obj;
+    public static Getter adjustGetter(AdaptContext ctx, Object obj) {
+        if (obj instanceof Getter) return (ConstanceGetter) obj;
 
         return new ConstanceGetter(ctx, obj);
     }
