@@ -1,6 +1,9 @@
 package io.kestra.plugin.hackathon.rule;
 
-import com.google.common.base.Strings;
+import io.kestra.plugin.hackathon.model.AdaptContext;
+import io.kestra.plugin.hackathon.model.BeanFactory;
+import io.kestra.plugin.hackathon.model.Getter;
+import io.kestra.plugin.hackathon.model.RowMap;
 import io.kestra.plugin.hackathon.rule.engine.HackathonBaseListener;
 import io.kestra.plugin.hackathon.rule.engine.HackathonLexer;
 import io.kestra.plugin.hackathon.rule.engine.HackathonParser;
@@ -95,45 +98,51 @@ public class HackathonRuleResolve extends HackathonBaseListener {
 
     @Override
     public void exitPut(HackathonParser.PutContext ctx) {
-        String value = popString();
-        String field = popString();
-        logger.info("put " + field + ":" + value);
-    }
-
-    private String popString() {
-        Object obj = stack.pop();
-        if (obj instanceof String) return (String) obj;
-        if (obj != null) return obj.toString();
-        return null;
+        Object value = stack.pop();
+        Object field = stack.pop();
+        AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
+        Getter valueGetter = BeanFactory.convertToGetter(context, value);
+        Getter fieldGetter = BeanFactory.convertToGetter(context, field);
+        RowMap putMap = BeanFactory.getPutRowMap(context, fieldGetter, valueGetter);
+        stack.push(putMap);
     }
 
     @Override
     public void exitRemove(HackathonParser.RemoveContext ctx) {
-        String field = popString();
-        logger.info("remove " + field);
+        Object value = stack.pop();
+        AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
+        Getter fieldGetter = BeanFactory.convertToGetter(context, value);
+        RowMap removeMap = BeanFactory.getRemoveRowMap(context, fieldGetter);
+        stack.push(removeMap);
     }
 
     @Override
     public void exitRename(HackathonParser.RenameContext ctx) {
-        String newName = popString();
-        String oldName = popString();
-        logger.info("rename " + oldName + ":" + newName);
+        Object oldField = stack.pop();
+        Object newField = stack.pop();
+        AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
+        Getter oldFieldGetter = BeanFactory.convertToGetter(context, oldField);
+        Getter newFieldGetter = BeanFactory.convertToGetter(context, newField);
+        RowMap removeMap = BeanFactory.getRenameMap(context, oldFieldGetter, newFieldGetter);
+        stack.push(removeMap);
     }
 
     @Override
     public void exitGetfield(HackathonParser.GetfieldContext ctx) {
-        String fieldName = popString();
-        stack.push("Value_" + fieldName);
-        logger.info("get Field " + fieldName);
+        Object field = stack.pop();
+        AdaptContext context = BeanFactory.getAdaptContext(logger, ctx);
+        Getter getter = BeanFactory.convertToGetter(context, field);
+        Getter fieldGetter = BeanFactory.getFieldGetter(context, getter);
+        stack.push(fieldGetter);
     }
 
     @Override
     public void exitConcat(HackathonParser.ConcatContext ctx) {
-        String str2 = popString();
-        String str1 = popString();
-        String result = Strings.nullToEmpty(str1) + Strings.nullToEmpty(str2);
-        stack.push(result);
-        logger.info("Concat: " + str1 + " + " + str2);
+//        String str2 = popString();
+//        String str1 = popString();
+//        String result = Strings.nullToEmpty(str1) + Strings.nullToEmpty(str2);
+//        stack.push(result);
+//        logger.info("Concat: " + str1 + " + " + str2);
     }
 
     @Override

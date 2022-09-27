@@ -2,16 +2,15 @@ package io.kestra.plugin.hackathon.model;
 
 import org.slf4j.Logger;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DynamicTable {
     private final Logger logger;
 
     private final List<DynamicRow> rows = new LinkedList<>();
-    private final Map<String, Integer> indexMap = new HashMap<>();
+    private final Map<String, Integer> indexMap = new ConcurrentHashMap<>();
+    private final Set<Integer> removeIndexSet = Collections.synchronizedSet(new HashSet<>());
 
     private int maxSize = 0;
     private DynamicRow currentRow = null;
@@ -21,7 +20,7 @@ public class DynamicTable {
     }
 
     public void appendRow() {
-        currentRow = new DynamicRow(maxSize, indexMap);
+        currentRow = new DynamicRow(maxSize, indexMap, removeIndexSet);
         rows.add(currentRow);
     }
 
